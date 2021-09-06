@@ -24,7 +24,6 @@ exports.login = async function (req, res) {
         user,
       },
     });
-<<<<<<< HEAD
   } catch(err) {
     console.error(err);
 
@@ -36,12 +35,5 @@ exports.login = async function (req, res) {
     }
 
     next(createError(500, ERR_MSG.SERVER_ERR));
-=======
-  } catch (err) {
-    res.status(500).json({
-      result: 'error',
-      message: ERR_MSG.UNKNOWN_ERR,
-    });
->>>>>>> 893eb489e4b392cb14af88af456220c338a20063
   }
 };
