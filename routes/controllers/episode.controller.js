@@ -9,7 +9,7 @@ exports.getEpisodes = async function (req, res, next) {
   try {
     const episodes = await Episode.find().exec();
 
-    return res.json({
+    res.json({
       result: 'ok',
       data: episodes,
     });
@@ -18,7 +18,7 @@ exports.getEpisodes = async function (req, res, next) {
 
     if (err instanceof mongoose.Error.ValidationError) {
       for (field in err.errors) {
-        res.status(500).json({
+        return res.status(500).json({
           result: 'error',
           message: err.errors[field].message,
         });
