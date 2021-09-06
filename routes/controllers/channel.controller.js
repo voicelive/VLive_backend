@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 
 const Channel = require('../../models/Channel');
 
-exports.getCannel = async (req, res, next) => {
+exports.getChannel = async (req, res, next) => {
   try {
-    const channelId = req.params;
+    const { channelId } = req.params;
     const channel = Channel.findById(channelId);
 
     res.json({

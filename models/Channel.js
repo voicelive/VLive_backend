@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const channel = new mongoose.Schema({
+const channelSchema = new mongoose.Schema({
   name: {
     type: String,
     isRequired: true,
@@ -42,4 +42,4 @@ const channel = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Channel', channel);
+module.exports = mongoose.model('Channel', channelSchema);

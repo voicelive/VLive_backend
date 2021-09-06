@@ -6,8 +6,6 @@ const index = require('./routes');
 const episode = require('./routes/episode');
 const channel = require('./routes/channel');
 
-const { ERR_MSG } = require('./constants/errors/errorMessage');
-
 const app = express();
 
 initialLoaders(app);
@@ -16,11 +14,11 @@ app.use('/', index);
 app.use('/episode', episode);
 app.use('/channel', channel);
 
-app.use(function(req, res, next) {
-  next(createError(404, ERR_MSG.NOT_FOUND));
+app.use(function (req, res, next) {
+  next(createError(404));
 });
 
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
