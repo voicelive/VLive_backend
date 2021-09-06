@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const characterSchema = new mongoose.Schema({
-	name: {
+  name: {
     type: String,
     isRequired: true,
   },
-	imgUrl: {
+  imgUrl: {
     type: String,
     isRequired: true,
   },
