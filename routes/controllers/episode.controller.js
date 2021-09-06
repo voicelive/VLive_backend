@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const { ERR_MSG } = require('../../constants/errors/errorMessage');
 
-const Episode = require('./../../models/Episode');
+const Episode = require('../../models/Episode');
 
 exports.getEpisodes = async function (req, res, next) {
   try {
@@ -17,12 +17,10 @@ exports.getEpisodes = async function (req, res, next) {
     console.error(err);
 
     if (err instanceof mongoose.Error.ValidationError) {
-      for (const field in err.errors) {
-        return res.status(500).json({
-          result: 'error',
-          message: err.errors[field].message,
-        });
-      }
+      return res.status(400).json({
+        result: 'error',
+        message: ERR_MSG.INVALID_DATA,
+      });
     }
 
     next(createError(500, ERR_MSG.SERVER_ERR));

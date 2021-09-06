@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { tokenSecretKey } = require('../../configs');
+const createError = require('http-errors');
 
 const { ERR_MSG } = require('../../constants/errors/errorMessage');
 
@@ -23,10 +24,16 @@ exports.login = async function (req, res) {
         user,
       },
     });
-  } catch (err) {
-    res.status(500).json({
-      result: 'error',
-      message: ERR_MSG.UNKNOWN_ERR,
-    });
+  } catch(err) {
+    console.error(err);
+
+    if (err instanceof mongoose.Error.ValidationError) {
+      return res.status(400).json({
+        result: 'error',
+        message: ERR_MSG.INVALID_DATA,
+      });
+    }
+
+    next(createError(500, ERR_MSG.SERVER_ERR));
   }
 };
