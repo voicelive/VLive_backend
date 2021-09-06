@@ -3,12 +3,14 @@ const createError = require('http-errors');
 
 const initialLoaders = require('./loader');
 const indexRouter = require('./routes');
+const channelRouter = require('./routes/channel');
 
 const app = express();
 
 initialLoaders(app);
 
 app.use('/', indexRouter);
+app.use('/channel', channelRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));
