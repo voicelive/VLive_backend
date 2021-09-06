@@ -1,7 +1,28 @@
 const createError = require('http-errors');
 const mongoose = require('mongoose');
-
 const Channel = require('../../models/Channel');
+
+exports.getChannels = async (req, res, next) => {
+  try {
+    const channels = await Channel.find().lean();
+
+    res.status(200).json({
+      result: 'ok',
+      data: channels,
+    });
+  } catch (err) {
+    console.error(err);
+
+    if (err instanceof mongoose.Error.ValidationError) {
+      for (field in err.errors) {
+        return res.status(500).json({
+          result: 'error',
+          message: err.errors[field].message,
+        });
+      }
+    }
+  }
+};
 
 exports.getChannel = async (req, res, next) => {
   try {

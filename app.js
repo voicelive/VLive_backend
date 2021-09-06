@@ -14,11 +14,11 @@ app.use('/', index);
 app.use('/episode', episode);
 app.use('/channel', channel);
 
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
