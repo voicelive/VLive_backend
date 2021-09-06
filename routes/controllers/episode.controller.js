@@ -2,13 +2,14 @@ const createError = require('http-errors');
 const mongoose = require('mongoose');
 
 const { ERR_MSG } = require('../../constants/errors/errorMessage');
+
 const Episode = require('./../../models/Episode');
 
 exports.getEpisodes = async (req, res, next) => {
   try {
     const episodes = await Episode.find().exec();
 
-    res.json({
+    return res.json({
       result: 'ok',
       data: episodes,
     });
