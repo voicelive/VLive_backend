@@ -27,4 +27,4 @@ exports.getEpisodes = async function (req, res, next) {
 
     next(createError(500, ERR_MSG.SERVER_ERR));
   }
-}
+};
