@@ -12,8 +12,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
+    "lint": "eslint '**/*.js'",
+    "lint:fix": "eslint '**/*.js' --fix",
     "prepare": "husky install"
   },
   "dependencies": {

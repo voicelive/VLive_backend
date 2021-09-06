@@ -17,7 +17,7 @@ exports.getEpisodes = async function (req, res, next) {
     console.error(err);
 
     if (err instanceof mongoose.Error.ValidationError) {
-      for (field in err.errors) {
+      for (const field in err.errors) {
         return res.status(500).json({
           result: 'error',
           message: err.errors[field].message,
