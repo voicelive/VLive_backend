@@ -61,7 +61,7 @@ exports.createChannel = async (req, res, next) => {
       });
     }
 
-    await Channel.create({
+    await Channel.create({wq
       name,
       episode: episodeId,
       host: userId,
