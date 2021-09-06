@@ -2,8 +2,8 @@ const createError = require('http-errors');
 const mongoose = require('mongoose');
 
 const Channel = require('../../models/Channel');
-const { ERR_MSG } = require('./../../constants/errors/errorMessage');
-const { VALIDATION_MSG } = require('./../../constants/errors/validationMessage');
+const { ERR_MSG} = require('../../constants/errors/errorMessage');
+const { VALIDATION_MSG } = require('../../constants/errors/validationMessage');
 
 exports.getChannels = async (req, res) => {
   try {
@@ -61,7 +61,7 @@ exports.createChannel = async (req, res, next) => {
       });
     }
 
-    await Channel.create({wq
+    await Channel.create({
       name,
       episode: episodeId,
       host: userId,
