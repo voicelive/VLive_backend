@@ -5,7 +5,7 @@ function connectMongoDB() {
   const db = mongoose.connection;
   mongoose.connect(databaseURL);
 
-  db.on('error', function (err) {
+  db.on('error', function () {
     console.log('Disconnected to database...');
     mongoose.disconnect();
   });

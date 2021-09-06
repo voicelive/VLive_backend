@@ -14,24 +14,28 @@ const channelSchema = new mongoose.Schema({
     type: ObjectId,
     ref: 'User',
   },
-  players: [{
-    userId: {
+  players: [
+    {
+      userId: {
+        type: ObjectId,
+        ref: 'User',
+      },
+      characterId: {
+        type: ObjectId,
+        ref: 'Character',
+      },
+      voteCount: {
+        type: Number,
+        default: 0,
+      },
+    },
+  ],
+  audience: [
+    {
       type: ObjectId,
       ref: 'User',
     },
-    characterId: {
-      type: ObjectId,
-      ref: 'Character',
-    },
-    voteCount: {
-      type: Number,
-      default: 0,
-    },
-  }],
-  audience: [{
-    type: ObjectId,
-    ref: 'User',
-  }],
+  ],
   isPlaying: {
     type: Boolean,
     default: false,
