@@ -5,7 +5,7 @@ const { ERR_MSG } = require('../../constants/errors/errorMessage');
 
 const Episode = require('./../../models/Episode');
 
-exports.getEpisodes = async (req, res, next) => {
+exports.getEpisodes = async function (req, res, next) {
   try {
     const episodes = await Episode.find().exec();
 

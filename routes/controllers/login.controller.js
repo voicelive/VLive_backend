@@ -5,7 +5,7 @@ const { ERR_MSG } = require('../../constants/errors/errorMessage');
 
 const User = require('../../models/User');
 
-exports.login = async (req, res, next) => {
+exports.login = async function (req, res, next) {
   try {
     const userInfo = req.body;
     const token = jwt.sign(userInfo, tokenSecretKey);
