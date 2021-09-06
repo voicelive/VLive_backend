@@ -1,20 +1,22 @@
 const jwt = require('jsonwebtoken');
-const User = require('../../models/User');
 const { tokenSecretKey } = require('../../configs');
-const { errorMessage } = require('../../constants/constant');
 
-exports.login = async (req, res, next) => {
+const { ERR_MSG } = require('../../constants/errors/errorMessage');
+
+const User = require('../../models/User');
+
+exports.login = async function (req, res, next) {
   try {
     const userInfo = req.body;
     const token = jwt.sign(userInfo, tokenSecretKey);
 
-    let user = await User.findOne(userInfo);
+    let user = await User.findOne(userInfo).exec();
 
-    if (!user) {
+    if (user !== null) {
       user = await User.create(userInfo);
     }
 
-    res.status(200).json({
+    res.json({
       result: 'ok',
       data: {
         token,
@@ -24,7 +26,7 @@ exports.login = async (req, res, next) => {
   } catch(err) {
     res.status(500).json({
       result: 'error',
-      message: errorMessage.UNKNOWN_ERR,
+      message: ERR_MSG.UNKNOWN_ERR,
     });
   }
 };
