@@ -6,7 +6,7 @@ const Channel = require('../../models/Channel');
 exports.getChannel = async (req, res, next) => {
   try {
     const { channelId } = req.params;
-    const channel = Channel.findById(channelId);
+    const channel = await Channel.findById(channelId);
 
     res.json({
       result: 'ok',
@@ -17,7 +17,7 @@ exports.getChannel = async (req, res, next) => {
 
     if (err instanceof mongoose.Error.ValidationError) {
       for (field in err.errors) {
-        res.status(500).json({
+        return res.status(500).json({
           result: 'error',
           message: err.errors[field].message,
         });
