@@ -6,7 +6,7 @@ const { ERR_MSG } = require('../../constants/errors/errorMessage');
 
 const User = require('../../models/User');
 
-exports.login = async function (req, res, next) {
+exports.login = async function (req, res) {
   try {
     const userInfo = req.body;
     const token = jwt.sign(userInfo, tokenSecretKey);
@@ -24,6 +24,7 @@ exports.login = async function (req, res, next) {
         user,
       },
     });
+<<<<<<< HEAD
   } catch(err) {
     console.error(err);
 
@@ -35,5 +36,12 @@ exports.login = async function (req, res, next) {
     }
 
     next(createError(500, ERR_MSG.SERVER_ERR));
+=======
+  } catch (err) {
+    res.status(500).json({
+      result: 'error',
+      message: ERR_MSG.UNKNOWN_ERR,
+    });
+>>>>>>> 893eb489e4b392cb14af88af456220c338a20063
   }
 };

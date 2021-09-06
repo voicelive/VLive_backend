@@ -5,7 +5,7 @@ const Channel = require('../../models/Channel');
 const { ERR_MSG } = require('./../../constants/errors/errorMessage');
 const { VALIDATION_MSG } = require('./../../constants/errors/validationMessage');
 
-exports.getChannels = async (req, res, next) => {
+exports.getChannels = async (req, res) => {
   try {
     const channels = await Channel.find().lean();
 
