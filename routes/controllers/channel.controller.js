@@ -59,10 +59,15 @@ exports.createChannel = async (req, res, next) => {
       });
     }
 
-    await Channel.create({
+    const newChannel = await Channel.create({
       name,
       episode: episodeId,
       host: userId,
+    });
+
+    res.json({
+      result: 'ok',
+      data: newChannel,
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {

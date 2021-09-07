@@ -24,6 +24,7 @@
     "express": "~4.16.1",
     "express-joi-validation": "^5.0.0",
     "http-errors": "~1.6.3",
+    "joi": "^17.4.2",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^9.1.1",
     "mongodb": "^4.1.1",

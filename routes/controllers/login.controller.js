@@ -1,12 +1,14 @@
+const mongoose = require('mongoose');
+const createError = require('http-errors');
+
 const jwt = require('jsonwebtoken');
 const { tokenSecretKey } = require('../../configs');
-const createError = require('http-errors');
 
 const { ERR_MSG } = require('../../constants/errors/errorMessage');
 
 const User = require('../../models/User');
 
-exports.login = async function (req, res) {
+exports.login = async function (req, res, next) {
   try {
     const userInfo = req.body;
     const token = jwt.sign(userInfo, tokenSecretKey);
@@ -24,7 +26,7 @@ exports.login = async function (req, res) {
         user,
       },
     });
-  } catch(err) {
+  } catch (err) {
     console.error(err);
 
     if (err instanceof mongoose.Error.ValidationError) {
