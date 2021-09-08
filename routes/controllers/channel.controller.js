@@ -65,7 +65,7 @@ exports.createChannel = async (req, res, next) => {
 
     res.json({
       result: 'ok',
-      data: newChannel._id,
+      data: newChannel,
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
