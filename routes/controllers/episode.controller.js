@@ -1,11 +1,10 @@
 const createError = require('http-errors');
 const mongoose = require('mongoose');
 
+const Episode = require('../../models/Episode');
 const { ERR_MSG } = require('../../constants/errors/errorMessage');
 
-const Episode = require('../../models/Episode');
-
-exports.getEpisodes = async function (req, res, next) {
+exports.getEpisodes = async function (_, res, next) {
   try {
     const episodes = await Episode.find().exec();
 
@@ -14,8 +13,6 @@ exports.getEpisodes = async function (req, res, next) {
       data: episodes,
     });
   } catch (err) {
-    console.error(err);
-
     if (err instanceof mongoose.Error.ValidationError) {
       return res.status(400).json({
         result: 'error',
