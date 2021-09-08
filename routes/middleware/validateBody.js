@@ -1,25 +1,23 @@
 const Joi = require('joi');
-
 const { VALIDATION_MSG } = require('../../constants/errors/validationMessage');
 
+const bodySchema = Joi.object({
+  name: Joi.required(),
+  episodeId: Joi.required(),
+  host: Joi.required(),
+});
+
 function validateBody(req, res, next) {
-  const bodySchema = Joi.object().keys({
-    name: Joi.string().required().max(30),
-    episode: Joi.string().required(),
-    host: Joi.string().required(),
-  });
+  const { error } = bodySchema.validate(req.body);
 
-  const result = bodySchema.validate(req.body);
-  const { value, error } = result;
-
-  if (!error) {
-    return next();
-  } else {
-    res.status(400).json({
+  if (error) {
+    return res.status(400).json({
       result: 'error',
       message: VALIDATION_MSG.FILL_BLANK,
     });
   }
-};
+
+  next();
+}
 
 module.exports = validateBody;

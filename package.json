@@ -1,6 +1,6 @@
 {
   "name": "vlive-backend",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A vlive backend",
   "author": "Team brosis <eunbines2@gmail.com>",
   "contributors": [
@@ -24,12 +24,12 @@
     "express": "~4.16.1",
     "express-joi-validation": "^5.0.0",
     "http-errors": "~1.6.3",
+    "joi": "^17.4.2",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^9.1.1",
     "mongodb": "^4.1.1",
     "mongoose": "^6.0.4",
-    "morgan": "~1.9.1",
-    "socket.io": "^4.2.0"
+    "morgan": "~1.9.1"
   },
   "devDependencies": {
     "eslint": "^7.32.0",

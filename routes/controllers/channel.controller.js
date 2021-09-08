@@ -5,7 +5,7 @@ const Channel = require('../../models/Channel');
 const { ERR_MSG } = require('../../constants/errors/errorMessage');
 const { VALIDATION_MSG } = require('../../constants/errors/validationMessage');
 
-exports.getChannels = async (req, res, next) => {
+exports.getChannels = async (_, res, next) => {
   try {
     const channels = await Channel.find().lean();
 
@@ -14,8 +14,6 @@ exports.getChannels = async (req, res, next) => {
       data: channels,
     });
   } catch (err) {
-    console.error(err);
-
     if (err instanceof mongoose.Error.ValidationError) {
       return res.status(400).json({
         result: 'error',
@@ -59,10 +57,15 @@ exports.createChannel = async (req, res, next) => {
       });
     }
 
-    await Channel.create({
+    const newChannel = await Channel.create({
       name,
       episode: episodeId,
       host: userId,
+    });
+
+    res.json({
+      result: 'ok',
+      data: newChannel,
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
