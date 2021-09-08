@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Types;
 
 const Channel = require('../../models/Channel');
 const { ERR_MSG } = require('../../constants/errors/errorMessage');
@@ -89,6 +90,96 @@ exports.getUserType = async (req, res, next) => {
     res.json({
       result: 'ok',
       data: isAudience ? 'audience' : 'player',
+    });
+  } catch (err) {
+    if (err instanceof mongoose.Error.ValidationError) {
+      return res.status(400).json({
+        result: 'error',
+        message: ERR_MSG.INVALID_DATA,
+      });
+    }
+
+    next(createError(500, ERR_MSG.SERVER_ERR));
+  }
+};
+
+exports.updateChannel = async (req, res, next) => {
+  try {
+    const { channelId } = req.params;
+    const { state, userId, type, characterId } = req.body;
+
+    if (!ObjectId.isValid(channelId)) {
+      return res.status(400).json({
+        result: 'error',
+        message: ERR_MSG.BAD_REQUEST,
+      });
+    }
+
+    const targetChannel = await Channel.findById(channelId);
+
+    if (targetChannel === null) {
+      return next(createError(500, ERR_MSG.SERVER_ERR));
+    }
+
+    const { players, audience } = targetChannel;
+
+    switch (state) {
+      case 'voting': {
+        const user = players.find((player) => {
+          player.userId.toString() === userId;
+        });
+        user.voteCount++;
+
+        break;
+      }
+
+      case 'enter': {
+        type === 'audience' ? audience.push(userId) : players.push({ userId });
+
+        break;
+      }
+
+      case 'exit': {
+        type === 'audience'
+          ? (targetChannel.audience = audience.filter(
+              (user) => user.toString() !== userId,
+            ))
+          : (targetChannel.players = players.filter((player) => {
+              player.userId.toString() !== userId;
+            }));
+
+        break;
+      }
+
+      case 'start': {
+        targetChannel.isPlaying = true;
+
+        break;
+      }
+
+      case 'end': {
+        targetChannel.isActive = false;
+
+        break;
+      }
+
+      case 'character': {
+        const player = players.find((player) => {
+          player.userId.toString() === userId;
+        });
+        player.characterId = characterId;
+
+        break;
+      }
+
+      default:
+        break;
+    }
+
+    await targetChannel.save();
+
+    res.json({
+      result: 'ok',
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
