@@ -19,6 +19,8 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res) => {
+  console.error(err);
+
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
