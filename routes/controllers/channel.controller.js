@@ -101,3 +101,78 @@ exports.getUserType = async (req, res, next) => {
     next(createError(500, ERR_MSG.SERVER_ERR));
   }
 };
+
+exports.putChannel = async (req, res, next) => {
+  try {
+    const { channelId } = req.params;
+    const { state, userId, type, characterId } = req.body;
+    const targetChannel = await Channel.findById(channelId);
+    let { players, audience } = targetChannel;
+
+    switch (state) {
+      case 'voting': {
+        const user = players.find((player) => {
+          player.userId.toString() === userId;
+        });
+        user.voteCount++;
+
+        break;
+      }
+
+      case 'enter': {
+        type === 'audience' ? audience.push(userId) : players.push({ userId });
+
+        break;
+      }
+
+      case 'exit': {
+        type === 'audience'
+          ? (audience = audience.filter((user) => user.toString() !== userId))
+          : (players = players.filter((player) => {
+              player.userId.toString() !== userId;
+            }));
+
+        break;
+      }
+
+      case 'start': {
+        targetChannel.isPlaying = true;
+
+        break;
+      }
+
+      case 'end': {
+        targetChannel.isActive = false;
+
+        break;
+      }
+
+      case 'character': {
+        const player = players.find((player) => {
+          player.userId.toString() === userId;
+        });
+        player.characterId = characterId;
+
+        break;
+      }
+
+      default:
+        break;
+    }
+
+    await targetChannel.save();
+
+    res.json({
+      result: 'ok',
+    });
+  } catch (err) {
+    if (err instanceof mongoose.Error.ValidationError) {
+      return res.status(400).json({
+        result: 'error',
+        message: ERR_MSG.INVALID_DATA,
+      });
+    }
+
+    next(createError(500, ERR_MSG.SERVER_ERR));
+  }
+};
