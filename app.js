@@ -16,7 +16,7 @@ app.use('/', index);
 app.use('/episode', episode);
 app.use('/channel', channel);
 
-app.use((_, _, next) => {
+app.use((req, res, next) => {
   next(createError(404, ERR_MSG.NOT_FOUND));
 });
 
