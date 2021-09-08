@@ -8,7 +8,7 @@ const bodySchema = Joi.object({
 });
 
 function validateBody(req, res, next) {
-  const { error, value } = bodySchema.validate(req.body);
+  const { error } = bodySchema.validate(req.body);
 
   if (error) {
     return res.status(400).json({
