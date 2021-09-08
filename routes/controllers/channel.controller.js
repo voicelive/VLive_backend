@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Types;
 
 const Channel = require('../../models/Channel');
 const { ERR_MSG } = require('../../constants/errors/errorMessage');
@@ -102,12 +103,25 @@ exports.getUserType = async (req, res, next) => {
   }
 };
 
-exports.putChannel = async (req, res, next) => {
+exports.updateChannel = async (req, res, next) => {
   try {
     const { channelId } = req.params;
     const { state, userId, type, characterId } = req.body;
+
+    if (!ObjectId.isValid(channelId)) {
+      return res.status(400).json({
+        result: 'error',
+        message: ERR_MSG.BAD_REQUEST,
+      });
+    }
+
     const targetChannel = await Channel.findById(channelId);
-    let { players, audience } = targetChannel;
+
+    if (targetChannel === null) {
+      return next(createError(500, ERR_MSG.SERVER_ERR));
+    }
+
+    const { players, audience } = targetChannel;
 
     switch (state) {
       case 'voting': {
@@ -127,8 +141,10 @@ exports.putChannel = async (req, res, next) => {
 
       case 'exit': {
         type === 'audience'
-          ? (audience = audience.filter((user) => user.toString() !== userId))
-          : (players = players.filter((player) => {
+          ? (targetChannel.audience = audience.filter(
+              (user) => user.toString() !== userId,
+            ))
+          : (targetChannel.players = players.filter((player) => {
               player.userId.toString() !== userId;
             }));
 
