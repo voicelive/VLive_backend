@@ -24,7 +24,7 @@ exports.getEpisodes = async (_, res, next) => {
   }
 };
 
-exports.getSelectedEpisode = async (req, res, next) => {
+exports.getEpisode = async (req, res, next) => {
   try {
     const { episodeId } = req.params;
     const episode = await Episode.findById(episodeId);
