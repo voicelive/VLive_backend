@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const User = require('../../models/User');
 const { ERR_MSG } = require('../../constants/errors/errorMessage');
 
-exports.login = async function (req, res, next) {
+exports.login = async (req, res, next) => {
   try {
     const userInfo = req.body;
     const token = jwt.sign(userInfo, tokenSecretKey);
