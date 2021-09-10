@@ -2,13 +2,14 @@ const createError = require('http-errors');
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 
+const Episode = require('../../models/Episode');
 const Channel = require('../../models/Channel');
 const { ERR_MSG } = require('../../constants/errors/errorMessage');
 const { VALIDATION_MSG } = require('../../constants/errors/validationMessage');
 
 exports.getChannels = async (_, res, next) => {
   try {
-    const channels = await Channel.find().lean();
+    const channels = await Channel.find().lean().populate('episode');
 
     res.status(200).json({
       result: 'ok',
@@ -57,10 +58,10 @@ exports.createChannel = async (req, res, next) => {
         message: VALIDATION_MSG.ALREADY_EXIST,
       });
     }
-
+    const episode = await Episode.findById(episodeId);
     const newChannel = await Channel.create({
       name,
-      episode: episodeId,
+      episode,
       host: userId,
     });
 
