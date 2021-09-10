@@ -9,16 +9,9 @@ exports.getChat = async (req, res, next) => {
     const { channelId } = req.params;
     const chat = await Chat.findOne({ channelId }).lean();
 
-    if (!chat) {
-      return res.send({
-        result: 'ok',
-        data: [],
-      });
-    }
-
     res.send({
       result: 'ok',
-      data: chat.chatList,
+      data: chat ? chat.chatList : [],
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
