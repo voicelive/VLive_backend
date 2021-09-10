@@ -105,7 +105,9 @@ exports.getUserType = async (req, res, next) => {
     const { channelId, userId } = req.params;
     const { audience } = await Channel.findById(channelId);
     const audienceIdList = audience.map((user) => user._id.toString());
-    const isAudience = audienceIdList.some((audience) => audience === userId);
+    const isAudience = audienceIdList.some(
+      ({ _id: audienceId }) => audienceId.toString() === userId,
+    );
 
     res.json({
       result: 'ok',
