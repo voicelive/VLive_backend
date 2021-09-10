@@ -7,11 +7,18 @@ const { ERR_MSG } = require('../../constants/errors/errorMessage');
 exports.getChat = async (req, res, next) => {
   try {
     const { channelId } = req.params;
-    const { chatList } = await Chat.findOne({ channelId }).lean();
+    const chat = await Chat.findOne({ channelId }).lean();
+
+    if (!chat) {
+      return res.send({
+        result: 'ok',
+        data: [],
+      });
+    }
 
     res.send({
       result: 'ok',
-      data: chatList,
+      data: chat.chatList,
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
