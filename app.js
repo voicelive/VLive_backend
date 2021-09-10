@@ -5,6 +5,7 @@ const initialLoaders = require('./loader');
 const index = require('./routes');
 const episode = require('./routes/episode');
 const channel = require('./routes/channel');
+const chat = require('./routes/chat');
 
 const { ERR_MSG } = require('./constants/errors/errorMessage');
 
@@ -15,6 +16,7 @@ initialLoaders(app);
 app.use('/', index);
 app.use('/episode', episode);
 app.use('/channel', channel);
+app.use('/chat', chat);
 
 app.use((req, res, next) => {
   next(createError(404, ERR_MSG.NOT_FOUND));

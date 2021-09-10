@@ -1,6 +1,5 @@
 const createError = require('http-errors');
 const mongoose = require('mongoose');
-const { ObjectId } = mongoose.Types;
 
 const Episode = require('../../models/Episode');
 const Channel = require('../../models/Channel');
@@ -131,7 +130,7 @@ exports.updateChannel = async (req, res, next) => {
     const { channelId } = req.params;
     const { state, userId, type, characterId } = req.body;
 
-    if (!ObjectId.isValid(channelId)) {
+    if (!mongoose.Types.ObjectId.isValid(channelId)) {
       return res.status(400).json({
         result: 'error',
         message: ERR_MSG.BAD_REQUEST,
