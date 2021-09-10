@@ -30,7 +30,27 @@ exports.getChannels = async (_, res, next) => {
 exports.getChannel = async (req, res, next) => {
   try {
     const { channelId } = req.params;
-    const channel = await Channel.findById(channelId);
+    const channel = await Channel.findById(channelId)
+      .populate('episode')
+      .populate('host')
+      .populate({
+        path: 'audience',
+        model: 'User',
+      })
+      .populate({
+        path: 'players',
+        populate: {
+          path: 'userId',
+          model: 'User',
+        },
+      })
+      .populate({
+        path: 'players',
+        populate: {
+          path: 'characterId',
+          model: 'Character',
+        },
+      });
 
     res.json({
       result: 'ok',
@@ -86,11 +106,13 @@ exports.getUserType = async (req, res, next) => {
     const { channelId, userId } = req.params;
     const { audience } = await Channel.findById(channelId);
     const audienceIdList = audience.map((user) => user._id.toString());
-    const isAudience = audienceIdList.some((audience) => audience === userId);
+    const isAudience = audienceIdList.some(
+      ({ _id: audienceId }) => audienceId.toString() === userId,
+    );
 
     res.json({
       result: 'ok',
-      data: isAudience ? 'audience' : 'player',
+      data: { type: isAudience ? 'audience' : 'player', userId },
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
