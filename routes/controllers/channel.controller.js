@@ -69,7 +69,7 @@ exports.getChannel = async (req, res, next) => {
 
 exports.createChannel = async (req, res, next) => {
   try {
-    const { name, episodeId, userId } = req.body;
+    const { name, episodeId, host } = req.body;
 
     if (await Channel.exists({ name })) {
       return res.status(400).json({
@@ -77,11 +77,12 @@ exports.createChannel = async (req, res, next) => {
         message: VALIDATION_MSG.ALREADY_EXIST,
       });
     }
+
     const episode = await Episode.findById(episodeId);
     const newChannel = await Channel.create({
       name,
       episode,
-      host: userId,
+      host,
     });
 
     res.json({
@@ -166,9 +167,9 @@ exports.updateChannel = async (req, res, next) => {
           ? (targetChannel.audience = audience.filter(
               (user) => user.toString() !== userId,
             ))
-          : (targetChannel.players = players.filter((player) => {
-              player.userId.toString() !== userId;
-            }));
+          : (targetChannel.players = players.filter(
+              (player) => player.userId.toString() !== userId,
+            ));
 
         break;
       }
