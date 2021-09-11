@@ -131,13 +131,6 @@ exports.updateChannel = async (req, res, next) => {
     const { channelId } = req.params;
     const { state, userId, type, characterId } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(channelId)) {
-      return res.status(400).json({
-        result: 'error',
-        message: ERR_MSG.BAD_REQUEST,
-      });
-    }
-
     const targetChannel = await Channel.findById(channelId);
 
     if (targetChannel === null) {
