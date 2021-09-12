@@ -142,8 +142,9 @@ exports.updateChannel = async (req, res, next) => {
     switch (state) {
       case 'voting': {
         const user = players.find((player) => {
-          player.userId.toString() === userId;
+          return player.userId.toString() === userId;
         });
+
         user.voteCount++;
 
         break;
@@ -198,6 +199,7 @@ exports.updateChannel = async (req, res, next) => {
       result: 'ok',
     });
   } catch (err) {
+    console.error(err);
     if (err instanceof mongoose.Error.ValidationError) {
       return res.status(400).json({
         result: 'error',
