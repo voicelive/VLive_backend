@@ -107,12 +107,12 @@ exports.getUserType = async (req, res, next) => {
     const { audience } = await Channel.findById(channelId);
     const audienceIdList = audience.map((user) => user._id.toString());
     const isAudience = audienceIdList.some(
-      ({ _id: audienceId }) => audienceId.toString() === userId,
+      (audienceId) => audienceId === userId,
     );
 
     res.json({
       result: 'ok',
-      data: { type: isAudience ? 'audience' : 'player', userId },
+      type: isAudience ? 'audience' : 'player',
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
@@ -129,7 +129,15 @@ exports.getUserType = async (req, res, next) => {
 exports.updateChannel = async (req, res, next) => {
   try {
     const { channelId } = req.params;
-    const { state, userId, type, characterId, playerId } = req.body;
+    const { state, type, userId, characterId } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(channelId)) {
+      return res.status(400).json({
+        result: 'error',
+        message: ERR_MSG.BAD_REQUEST,
+      });
+    }
+
     const targetChannel = await Channel.findById(channelId);
 
     if (targetChannel === null) {
@@ -181,10 +189,9 @@ exports.updateChannel = async (req, res, next) => {
       }
 
       case 'character': {
-        const player = players.find((player) => {
-          player.userId.toString() === userId;
-        });
-
+        const player = players.find(
+          (player) => player.userId.toString() === userId,
+        );
         player.characterId = characterId;
 
         break;

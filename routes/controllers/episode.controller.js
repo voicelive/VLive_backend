@@ -6,7 +6,7 @@ const { ERR_MSG } = require('../../constants/errors/errorMessage');
 
 exports.getEpisodes = async (_, res, next) => {
   try {
-    const episodes = await Episode.find().exec();
+    const episodes = await Episode.find();
 
     res.json({
       result: 'ok',
@@ -27,7 +27,7 @@ exports.getEpisodes = async (_, res, next) => {
 exports.getEpisode = async (req, res, next) => {
   try {
     const { episodeId } = req.params;
-    const episode = await Episode.findById(episodeId);
+    const episode = await Episode.findById(episodeId).populate('characters');
 
     res.json({
       result: 'ok',
