@@ -9,6 +9,7 @@ function connectMongoDB() {
   require('../models/Channel');
   require('../models/Episode');
   require('../models/User');
+  require('../models/Chat');
 
   db.on('error', function () {
     console.log('Disconnected to database...');
