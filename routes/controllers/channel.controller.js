@@ -105,10 +105,9 @@ exports.getUserType = async (req, res, next) => {
   try {
     const { channelId, userId } = req.params;
     const { audience } = await Channel.findById(channelId);
-    const audienceIdList = audience.map((user) => user._id.toString());
-    const isAudience = audienceIdList.some(
-      (audienceId) => audienceId === userId,
-    );
+    const isAudience = audience.some(({ _id }) => {
+      return _id.toString() === userId;
+    });
 
     res.json({
       result: 'ok',
@@ -168,9 +167,9 @@ exports.updateChannel = async (req, res, next) => {
           ? (targetChannel.audience = audience.filter(
               (user) => user.toString() !== userId,
             ))
-          : (targetChannel.players = players.filter(
-              (player) => player.userId.toString() !== userId,
-            ));
+          : (targetChannel.players = players.filter((player) => {
+              return player.userId.toString() !== userId;
+            }));
 
         break;
       }
