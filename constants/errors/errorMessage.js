@@ -3,6 +3,6 @@ exports.ERR_MSG = {
   NOT_FOUND: '페이지를 찾을 수 없습니다.',
   INVALID_DATA: '유효하지 않은 데이터입니다.',
   BAD_REQUEST: '잘못된 요청입니다.',
-  TOKEN_EXPIRED: '유효하지 않은 토큰입니다.',
-  UNAUTHENTICATED: '인증되지 않은 사용자입니다.',
+  INVALID_TOKEN: '유효하지 않은 토큰입니다.',
+  TOKEN_EXPIRED: '만료된 토큰입니다.',
 };

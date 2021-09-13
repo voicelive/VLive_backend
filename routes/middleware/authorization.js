@@ -1,26 +1,32 @@
 const jwt = require('jsonwebtoken');
-const TOKEN_SECRET_KEY = process.env.TOKEN_SECRET_KEY;
-const { ERR_MSG } = require('../../constants/errors/errorMessage');
+
+const { TOKEN_SECRET_KEY } = process.env;
+const { ERR_MSG } = require('../../constants/errors');
 
 async function verifyToken(req, res, next) {
   const token = req.headers.authorization.split(' ')[1];
 
   try {
-    const decoded = await jwt.verify(token, TOKEN_SECRET_KEY);
+    await jwt.verify(token, TOKEN_SECRET_KEY);
 
-    if (decoded) {
-      return next();
+    next();
+  } catch (err) {
+    if (err.message === 'TokenExpiredError') {
+      res.status(401).json({
+        result: 'error',
+        message: ERR_MSG.TOKEN_EXPIRED,
+      });
+    } else if (err.message === 'JsonWebTokenError') {
+      res.status(401).json({
+        result: 'error',
+        message: ERR_MSG.INVALID_TOKEN,
+      });
+    } else {
+      res.status(401).json({
+        result: 'error',
+        message: err.message,
+      });
     }
-
-    return res.status(401).json({
-      result: 'error',
-      message: ERR_MSG.TOKEN_EXPIRED,
-    });
-  } catch {
-    res.status(401).json({
-      result: 'error',
-      message: ERR_MSG.UNAUTHENTICATED,
-    });
   }
 }
 
