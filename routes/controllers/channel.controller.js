@@ -129,7 +129,7 @@ exports.getUserType = async (req, res, next) => {
 exports.updateChannel = async (req, res, next) => {
   try {
     const { channelId } = req.params;
-    const { state, userId, type, characterId } = req.body;
+    const { state, userId, type, characterId, playerId } = req.body;
     const targetChannel = await Channel.findById(channelId);
 
     if (targetChannel === null) {
@@ -140,17 +140,11 @@ exports.updateChannel = async (req, res, next) => {
 
     switch (state) {
       case 'voting': {
-        await Channel.findOneAndUpdate(
-          {
-            _id: channelId,
-            'players.userId': userId,
-          },
-          {
-            $inc: {
-              'players.$.voteCount': 1,
-            },
-          },
+        const user = targetChannel.players.find(
+          (player) => player._id.toString() === playerId,
         );
+
+        user.voteCount++;
 
         break;
       }
