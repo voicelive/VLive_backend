@@ -130,7 +130,6 @@ exports.updateChannel = async (req, res, next) => {
   try {
     const { channelId } = req.params;
     const { state, userId, type, characterId } = req.body;
-
     const targetChannel = await Channel.findById(channelId);
 
     if (targetChannel === null) {
@@ -141,11 +140,17 @@ exports.updateChannel = async (req, res, next) => {
 
     switch (state) {
       case 'voting': {
-        const user = players.find((player) => {
-          return player.userId.toString() === userId;
-        });
-
-        user.voteCount++;
+        await Channel.findOneAndUpdate(
+          {
+            _id: channelId,
+            'players.userId': userId,
+          },
+          {
+            $inc: {
+              'players.$.voteCount': 1,
+            },
+          },
+        );
 
         break;
       }
@@ -176,6 +181,7 @@ exports.updateChannel = async (req, res, next) => {
 
       case 'end': {
         targetChannel.isActive = false;
+        res.json({ result: 'ok' });
 
         break;
       }
@@ -184,6 +190,7 @@ exports.updateChannel = async (req, res, next) => {
         const player = players.find((player) => {
           player.userId.toString() === userId;
         });
+
         player.characterId = characterId;
 
         break;
