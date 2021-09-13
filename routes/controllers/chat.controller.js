@@ -27,16 +27,21 @@ exports.getChat = async (req, res, next) => {
 
 exports.addChat = async (req, res, next) => {
   try {
-    const { channelId, chatList } = req.body;
-    const chat = await Chat.findOneAndUpdate({ channelId }, { chatList });
+    const { channelId, input } = req.body;
+    const chat = await Chat.findOneAndUpdate(
+      { channelId },
+      { $push: { chatList: input } },
+      { new: true },
+    );
 
     if (!chat) {
-      await Chat.create(req.body);
+      return await Chat.create({
+        channelId,
+        chatList: [input],
+      });
     }
 
-    res.json({
-      result: 'ok',
-    });
+    res.json({ result: 'ok' });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
       return res.status(400).json({
