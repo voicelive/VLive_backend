@@ -141,7 +141,7 @@ exports.updateChannel = async (req, res, next) => {
     switch (state) {
       case 'voting': {
         const user = targetChannel.players.find(
-          (player) => player._id.toString() === playerId,
+          ({ _id }) => _id.toString() === playerId,
         );
 
         user.voteCount++;
@@ -189,9 +189,6 @@ exports.updateChannel = async (req, res, next) => {
 
         break;
       }
-
-      default:
-        break;
     }
 
     await targetChannel.save();
@@ -200,7 +197,6 @@ exports.updateChannel = async (req, res, next) => {
       result: 'ok',
     });
   } catch (err) {
-    console.error(err);
     if (err instanceof mongoose.Error.ValidationError) {
       return res.status(400).json({
         result: 'error',
