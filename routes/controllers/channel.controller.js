@@ -129,15 +129,7 @@ exports.getUserType = async (req, res, next) => {
 exports.updateChannel = async (req, res, next) => {
   try {
     const { channelId } = req.params;
-    const { state, userId, type, characterId } = req.body;
-
-    if (!mongoose.Types.ObjectId.isValid(channelId)) {
-      return res.status(400).json({
-        result: 'error',
-        message: ERR_MSG.BAD_REQUEST,
-      });
-    }
-
+    const { state, userId, type, characterId, playerId } = req.body;
     const targetChannel = await Channel.findById(channelId);
 
     if (targetChannel === null) {
@@ -148,9 +140,10 @@ exports.updateChannel = async (req, res, next) => {
 
     switch (state) {
       case 'voting': {
-        const user = players.find((player) => {
-          player.userId.toString() === userId;
-        });
+        const user = targetChannel.players.find(
+          ({ _id }) => _id.toString() === playerId,
+        );
+
         user.voteCount++;
 
         break;
@@ -182,6 +175,7 @@ exports.updateChannel = async (req, res, next) => {
 
       case 'end': {
         targetChannel.isActive = false;
+        res.json({ result: 'ok' });
 
         break;
       }
@@ -190,13 +184,11 @@ exports.updateChannel = async (req, res, next) => {
         const player = players.find((player) => {
           player.userId.toString() === userId;
         });
+
         player.characterId = characterId;
 
         break;
       }
-
-      default:
-        break;
     }
 
     await targetChannel.save();
