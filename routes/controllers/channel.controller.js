@@ -33,10 +33,6 @@ exports.getChannel = async (req, res, next) => {
       .populate('episode')
       .populate('host')
       .populate({
-        path: 'audience',
-        model: 'User',
-      })
-      .populate({
         path: 'players',
         populate: {
           path: 'userId',
@@ -101,34 +97,10 @@ exports.createChannel = async (req, res, next) => {
   }
 };
 
-exports.getUserType = async (req, res, next) => {
-  try {
-    const { channelId, userId } = req.params;
-    const { audience } = await Channel.findById(channelId);
-    const isAudience = audience.some(({ _id }) => {
-      return _id.toString() === userId;
-    });
-
-    res.json({
-      result: 'ok',
-      type: isAudience ? 'audience' : 'player',
-    });
-  } catch (err) {
-    if (err instanceof mongoose.Error.ValidationError) {
-      return res.status(400).json({
-        result: 'error',
-        message: ERR_MSG.INVALID_DATA,
-      });
-    }
-
-    next(createError(500, ERR_MSG.SERVER_ERR));
-  }
-};
-
 exports.updateChannel = async (req, res, next) => {
   try {
     const { channelId } = req.params;
-    const { state, type, userId, characterId } = req.body;
+    const { state, userId, characterId, playerId } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(channelId)) {
       return res.status(400).json({
@@ -143,7 +115,7 @@ exports.updateChannel = async (req, res, next) => {
       return next(createError(500, ERR_MSG.SERVER_ERR));
     }
 
-    const { players, audience } = targetChannel;
+    const { players } = targetChannel;
 
     switch (state) {
       case 'voting': {
@@ -157,19 +129,15 @@ exports.updateChannel = async (req, res, next) => {
       }
 
       case 'enter': {
-        type === 'audience' ? audience.push(userId) : players.push({ userId });
+        players.push({ userId });
 
         break;
       }
 
       case 'exit': {
-        type === 'audience'
-          ? (targetChannel.audience = audience.filter(
-              (user) => user.toString() !== userId,
-            ))
-          : (targetChannel.players = players.filter((player) => {
-              return player.userId.toString() !== userId;
-            }));
+        targetChannel.players = players.filter((player) => {
+          return player.userId.toString() !== userId;
+        });
 
         break;
       }

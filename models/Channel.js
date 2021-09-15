@@ -30,12 +30,6 @@ const channelSchema = new mongoose.Schema({
       },
     },
   ],
-  audience: [
-    {
-      type: ObjectId,
-      ref: 'User',
-    },
-  ],
   isPlaying: {
     type: Boolean,
     default: false,
