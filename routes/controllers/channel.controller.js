@@ -35,14 +35,14 @@ exports.getChannel = async (req, res, next) => {
       .populate({
         path: 'players',
         populate: {
-          path: 'userId',
+          path: 'user',
           model: 'User',
         },
       })
       .populate({
         path: 'players',
         populate: {
-          path: 'characterId',
+          path: 'character',
           model: 'Character',
         },
       });
@@ -52,6 +52,7 @@ exports.getChannel = async (req, res, next) => {
       data: channel,
     });
   } catch (err) {
+    console.log(err);
     if (err instanceof mongoose.Error.ValidationError) {
       return res.status(400).json({
         result: 'error',
@@ -129,15 +130,15 @@ exports.updateChannel = async (req, res, next) => {
       }
 
       case 'enter': {
-        players.push({ userId });
+        players.push({ user: userId });
 
         break;
       }
 
       case 'exit': {
-        targetChannel.players = players.filter((player) => {
-          return player.userId.toString() !== userId;
-        });
+        targetChannel.players = players.filter(
+          (player) => player.user.toString() !== userId,
+        );
 
         break;
       }
@@ -157,9 +158,9 @@ exports.updateChannel = async (req, res, next) => {
 
       case 'character': {
         const player = players.find(
-          (player) => player.userId.toString() === userId,
+          (player) => player.user.toString() === userId,
         );
-        player.characterId = characterId;
+        player.character = characterId;
 
         break;
       }

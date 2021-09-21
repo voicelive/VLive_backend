@@ -1,12 +1,16 @@
 const jwt = require('jsonwebtoken');
 
 const { TOKEN_SECRET_KEY } = process.env;
-const { ERR_MSG } = require('../../constants/errors');
+const { ERR_MSG } = require('../../constants/errors/errorMessage');
 
 async function verifyToken(req, res, next) {
-  const token = req.headers.authorization.split(' ')[1];
-
   try {
+    if (req.headers.authorization == null) {
+      throw new Error('JsonWebTokenError');
+    }
+
+    const token = req.headers.authorization.split(' ')[1];
+
     await jwt.verify(token, TOKEN_SECRET_KEY);
 
     next();
