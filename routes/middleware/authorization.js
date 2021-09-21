@@ -5,7 +5,7 @@ const { ERR_MSG } = require('../../constants/errors/errorMessage');
 
 async function verifyToken(req, res, next) {
   try {
-    if (req.headers.authorization) {
+    if (req.headers.authorization == null) {
       throw new Error('JsonWebTokenError');
     }
 
