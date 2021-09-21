@@ -16,11 +16,11 @@ const channelSchema = new mongoose.Schema({
   },
   players: [
     {
-      userId: {
+      user: {
         type: ObjectId,
         ref: 'User',
       },
-      characterId: {
+      character: {
         type: ObjectId,
         ref: 'Character',
       },
