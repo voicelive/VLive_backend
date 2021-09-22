@@ -16,7 +16,7 @@ initialLoaders(app);
 
 app.use(ROUTES.INDEX, index);
 app.use(ROUTES.EPISODE, episode);
-app.use(ROUTES.EPISODE, channel);
+app.use(ROUTES.CHANNEL, channel);
 app.use(ROUTES.CHAT, chat);
 
 app.use((req, res, next) => {
