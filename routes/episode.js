@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 const validateObjectId = require('./middleware/validateObjectId');
-const episodeController = require('./controllers/episode.controller');
 const verifyToken = require('./middleware/authorization');
+const episodeController = require('./controllers/episode.controller');
 
-router.get('/', episodeController.getEpisodes);
+const { ROUTES } = require('../constants/routes');
+
+router.get(ROUTES.INDEX, episodeController.getEpisodes);
 router.get(
-  '/:episodeId',
+  ROUTES.EPISODE_ID,
   verifyToken,
   validateObjectId,
   episodeController.getEpisode,

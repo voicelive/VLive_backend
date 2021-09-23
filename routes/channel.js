@@ -3,13 +3,20 @@ const router = express.Router();
 
 const validateObjectId = require('./middleware/validateObjectId');
 const validateBody = require('./middleware/validateBody');
-const channelController = require('./controllers/channel.controller');
 const verifyToken = require('./middleware/authorization');
+const channelController = require('./controllers/channel.controller');
 
-router.get('/', channelController.getChannels);
-router.get('/:channelId', validateObjectId, channelController.getChannel);
+const { ROUTES } = require('../constants/routes');
 
-router.put('/:channelId', verifyToken, channelController.updateChannel);
-router.post('/', verifyToken, validateBody, channelController.createChannel);
+router.get(ROUTES.INDEX, channelController.getChannels);
+router.get(ROUTES.CHANNEL_ID, validateObjectId, channelController.getChannel);
+
+router.put(ROUTES.CHANNEL_ID, verifyToken, channelController.updateChannel);
+router.post(
+  ROUTES.INDEX,
+  verifyToken,
+  validateBody,
+  channelController.createChannel,
+);
 
 module.exports = router;
