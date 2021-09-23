@@ -1,10 +1,13 @@
-const createError = require('http-errors');
 const mongoose = require('mongoose');
 
 const Episode = require('../../models/Episode');
 const Channel = require('../../models/Channel');
-const { ERR_MSG } = require('../../constants/errors/errorMessage');
-const { VALIDATION_MSG } = require('../../constants/errors/validationMessage');
+const {
+  VliveError,
+  InvalidDataError,
+  ExistingDataError,
+  BadRequestError,
+} = require('../../lib/errors');
 
 exports.getChannels = async (_, res, next) => {
   try {
@@ -16,13 +19,10 @@ exports.getChannels = async (_, res, next) => {
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      return res.status(400).json({
-        result: 'error',
-        message: ERR_MSG.INVALID_DATA,
-      });
+      return next(new InvalidDataError());
     }
 
-    next(createError(500, ERR_MSG.SERVER_ERR));
+    next(new VliveError());
   }
 };
 
@@ -52,15 +52,11 @@ exports.getChannel = async (req, res, next) => {
       data: channel,
     });
   } catch (err) {
-    console.log(err);
     if (err instanceof mongoose.Error.ValidationError) {
-      return res.status(400).json({
-        result: 'error',
-        message: ERR_MSG.INVALID_DATA,
-      });
+      return next(new InvalidDataError());
     }
 
-    next(createError(500, ERR_MSG.SERVER_ERR));
+    next(new VliveError());
   }
 };
 
@@ -69,10 +65,7 @@ exports.createChannel = async (req, res, next) => {
     const { name, episodeId, host } = req.body;
 
     if (await Channel.exists({ name })) {
-      return res.status(400).json({
-        result: 'error',
-        message: VALIDATION_MSG.ALREADY_EXIST,
-      });
+      return next(new ExistingDataError());
     }
 
     const episode = await Episode.findById(episodeId);
@@ -88,13 +81,10 @@ exports.createChannel = async (req, res, next) => {
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      return res.status(400).json({
-        result: 'error',
-        message: ERR_MSG.INVALID_DATA,
-      });
+      return next(new InvalidDataError());
     }
 
-    next(createError(500, ERR_MSG.SERVER_ERR));
+    next(new VliveError());
   }
 };
 
@@ -104,16 +94,13 @@ exports.updateChannel = async (req, res, next) => {
     const { state, userId, characterId, playerId } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(channelId)) {
-      return res.status(400).json({
-        result: 'error',
-        message: ERR_MSG.BAD_REQUEST,
-      });
+      return next(new BadRequestError());
     }
 
     const targetChannel = await Channel.findById(channelId);
 
     if (targetChannel === null) {
-      return next(createError(500, ERR_MSG.SERVER_ERR));
+      next(new VliveError());
     }
 
     const { players } = targetChannel;
@@ -173,12 +160,9 @@ exports.updateChannel = async (req, res, next) => {
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      return res.status(400).json({
-        result: 'error',
-        message: ERR_MSG.INVALID_DATA,
-      });
+      return next(new InvalidDataError());
     }
 
-    next(createError(500, ERR_MSG.SERVER_ERR));
+    next(new VliveError());
   }
 };

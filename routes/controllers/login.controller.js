@@ -1,10 +1,10 @@
-const jwt = require('jsonwebtoken');
-const { tokenSecretKey } = require('../../configs');
-const createError = require('http-errors');
 const mongoose = require('mongoose');
 
+const jwt = require('jsonwebtoken');
+const { tokenSecretKey } = require('../../configs');
+
 const User = require('../../models/User');
-const { ERR_MSG } = require('../../constants/errors/errorMessage');
+const { InvalidDataError, VliveError } = require('../../lib/errors');
 
 exports.login = async (req, res, next) => {
   try {
@@ -26,12 +26,9 @@ exports.login = async (req, res, next) => {
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      return res.status(400).json({
-        result: 'error',
-        message: ERR_MSG.INVALID_DATA,
-      });
+      return next(new InvalidDataError());
     }
 
-    next(createError(500, ERR_MSG.SERVER_ERR));
+    next(new VliveError());
   }
 };
