@@ -22,7 +22,7 @@ app.use((req, res, next) => {
   next(new NotFoundError());
 });
 
-app.use((err, req, res) => {
+app.use((err, req, res, _) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
