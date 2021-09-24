@@ -22,6 +22,7 @@ describe('GET `/episode`', function () {
       .expect(200)
       .end(async (err, res) => {
         if (err) return done(err);
+
         const { data, result } = res.body;
         const allEpisodes = await Episode.find().lean();
 
@@ -50,6 +51,7 @@ describe('GET `/episode/:episodeId`', function () {
         done();
       });
   });
+
   after(() => {
     token = '';
   });
@@ -65,9 +67,12 @@ describe('GET `/episode/:episodeId`', function () {
         .expect(401)
         .end((err, res) => {
           if (err) return done(err);
+
           const { result, message } = res.body;
+
           expect(result).eql('error');
           expect(message).eql(ERR_MSG.INVALID_TOKEN);
+
           done();
         });
     });
@@ -82,16 +87,16 @@ describe('GET `/episode/:episodeId`', function () {
         .expect(200)
         .end((err, res) => {
           if (err) return done(err);
+
           const { data, result } = res.body;
+
           expect(result).eql('ok');
 
+          expect(data).to.exist;
           expect(data._id).to.exist;
-          expect(data.title).to.exist;
-          expect(data.thumbnail).to.exist;
-          expect(data.videoUrl).to.exist;
-          expect(data.characters).to.exist;
-
           expect(data._id).to.eql(episodeId);
+
+          expect(data.characters).to.exist;
           expect(data.characters).to.be.instanceOf(Array);
           done();
         });
