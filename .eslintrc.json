@@ -12,7 +12,7 @@
   },
   "plugins": ["prettier"],
   "rules": {
-    "no-console": 1,
+    "no-console": "off",
     "quotes": [2, "single"]
   }
 }
