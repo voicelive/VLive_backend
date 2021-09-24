@@ -12,7 +12,7 @@ exports.login = async (req, res, next) => {
     const token = jwt.sign(userInfo, tokenSecretKey);
     let user = await User.findOne(userInfo);
 
-    if (user === null) {
+    if (user == null) {
       user = await User.create(userInfo);
     }
 

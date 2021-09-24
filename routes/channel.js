@@ -9,14 +9,13 @@ const channelController = require('./controllers/channel.controller');
 const { ROUTES } = require('../constants/routes');
 
 router.get(ROUTES.INDEX, channelController.getChannels);
-router.get(ROUTES.CHANNEL_ID, validateObjectId, channelController.getChannel);
-
-router.put(ROUTES.CHANNEL_ID, verifyToken, channelController.updateChannel);
 router.post(
   ROUTES.INDEX,
   verifyToken,
   validateBody,
   channelController.createChannel,
 );
+router.get(ROUTES.CHANNEL_ID, validateObjectId, channelController.getChannel);
+router.put(ROUTES.CHANNEL_ID, verifyToken, channelController.updateChannel);
 
 module.exports = router;
