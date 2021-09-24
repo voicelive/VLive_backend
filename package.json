@@ -15,7 +15,7 @@
     "lint": "eslint '**/*.js'",
     "lint:fix": "eslint '**/*.js' --fix",
     "prepare": "husky install",
-    "test": "NODE_ENV=test mocha spec"
+    "test": "mocha spec"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
