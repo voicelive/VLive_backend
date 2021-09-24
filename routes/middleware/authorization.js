@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const { TOKEN_SECRET_KEY } = process.env;
+const { tokenSecretKey } = require('../../configs/index');
 const { ERR_MSG } = require('../../constants/errors/errorMessage');
 
 async function verifyToken(req, res, next) {
@@ -11,7 +11,7 @@ async function verifyToken(req, res, next) {
 
     const token = req.headers.authorization.split(' ')[1];
 
-    await jwt.verify(token, TOKEN_SECRET_KEY);
+    await jwt.verify(token, tokenSecretKey);
 
     next();
   } catch (err) {
