@@ -6,7 +6,7 @@ const { ERR_MSG } = require('../../constants/errors/errorMessage');
 async function verifyToken(req, res, next) {
   try {
     if (req.headers.authorization == null) {
-      throw new Error('JsonWebTokenError');
+      throw new Error(ERR_MSG.INVALID_TOKEN);
     }
 
     const token = req.headers.authorization.split(' ')[1];
@@ -15,12 +15,12 @@ async function verifyToken(req, res, next) {
 
     next();
   } catch (err) {
-    if (err.message === 'TokenExpiredError') {
+    if (err.name === 'TokenExpiredError') {
       res.status(401).json({
         result: 'error',
         message: ERR_MSG.TOKEN_EXPIRED,
       });
-    } else if (err.message === 'JsonWebTokenError') {
+    } else if (err.name === 'JsonWebTokenError') {
       res.status(401).json({
         result: 'error',
         message: ERR_MSG.INVALID_TOKEN,
