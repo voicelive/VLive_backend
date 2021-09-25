@@ -1,8 +1,7 @@
-const createError = require('http-errors');
 const mongoose = require('mongoose');
 
 const Chat = require('../../models/Chat');
-const { ERR_MSG } = require('../../constants/errors/errorMessage');
+const { VliveError, InvalidDataError } = require('../../lib/errors');
 
 exports.getChat = async (req, res, next) => {
   try {
@@ -15,13 +14,10 @@ exports.getChat = async (req, res, next) => {
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      return res.status(400).json({
-        result: 'error',
-        message: ERR_MSG.INVALID_DATA,
-      });
+      return next(new InvalidDataError());
     }
 
-    next(createError(500, ERR_MSG.SERVER_ERR));
+    next(new VliveError());
   }
 };
 
@@ -44,12 +40,9 @@ exports.addChat = async (req, res, next) => {
     res.json({ result: 'ok' });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      return res.status(400).json({
-        result: 'error',
-        message: ERR_MSG.INVALID_DATA,
-      });
+      return next(new InvalidDataError());
     }
 
-    next(createError(500, ERR_MSG.SERVER_ERR));
+    next(new VliveError());
   }
 };
