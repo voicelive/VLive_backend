@@ -10,10 +10,9 @@ exports.login = async (req, res, next) => {
   try {
     const userInfo = req.body;
     const token = jwt.sign(userInfo, tokenSecretKey);
+    let user = await User.findOne(userInfo);
 
-    let user = await User.findOne(userInfo).exec();
-
-    if (user === null) {
+    if (user == null) {
       user = await User.create(userInfo);
     }
 
