@@ -35,7 +35,7 @@
 
 ### **프로젝트 멤버**
 
-🐞 [버그잡기 달인 **김은빈**](https://github.com/stitchy11)<br>
+🐞 [버그잡기 달인 **김은빈**](https://github.com/eunbin20)<br>
 🤹 [디테일의 달인 **양하윤**](https://github.com/mycolki)<br>
 😃 [화이팅의 달인 **조효정**](https://github.com/julian-jeong)
 
